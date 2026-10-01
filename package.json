@@ -4,6 +4,8 @@
   "scripts": {
     "build": "echo \"The build step is not required when using JavaScript!\" && exit 0",
     "cdk": "cdk",
+    "deploy:dev": "cdk deploy --profile dev-environment",
+    "destroy:dev": "cdk destroy --profile dev-environment",
     "test": "jest"
   },
   "devDependencies": {
