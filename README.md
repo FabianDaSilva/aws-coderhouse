@@ -42,21 +42,21 @@ flowchart LR
 - **`lib/aws-coderhouse-stack.js`:** el stack de CDK con la función, la API y sus permisos.
 - **`bin/aws-coderhouse.js`:** el punto de entrada de la app de CDK.
 - **`test/`:** carpeta de pruebas de CDK.
-- **`iam_policy.json`:** la política de permisos de la entrega (se agrega después del despliegue).
-- **`capturas/`:** evidencia de la ejecución (se agrega después del despliegue).
+- **[`iam/iam_policy.json`](iam/iam_policy.json):** la política de permisos de la entrega, copiada de `AWSLambdaBasicExecutionRole` (ver la sección siguiente).
+- **[`capturas/`](capturas/):** evidencia de la ejecución real (ver la sección de evidencia).
 
 ### 🔐 Permisos de IAM
 
 Para este escenario hacen falta dos permisos, y CDK crea ambos:
 
-- **Rol de ejecución de la función:** un rol de servicio que asume Lambda, con la política administrada `AWSLambdaBasicExecutionRole`. Permite escribir logs en CloudWatch. Sin ella no aparecería ningún log.
+- **Rol de ejecución de la función:** un rol de servicio que asume Lambda, con la política administrada `AWSLambdaBasicExecutionRole`. Permite escribir logs en CloudWatch (`logs:CreateLogGroup`, `logs:CreateLogStream` y `logs:PutLogEvents`). Sin ella no aparecería ningún log. Su documento JSON está en [`iam/iam_policy.json`](iam/iam_policy.json), obtenido de AWS con `aws iam get-policy-version`. Es una política administrada por AWS y usa `"Resource": "*"`; como mejora, se podría acotar al grupo de logs de la función.
 - **Permiso de invocación:** una política *basada en recurso* sobre la función, con `lambda:InvokeFunction` y principal `apigateway.amazonaws.com`. Es lo que autoriza a API Gateway a invocar la función. Sin esto, la API respondería con error.
 
 En este escenario la función no accede a otros servicios, por eso no lleva política inline propia (como sí ocurriría con `s3:GetObject` en el escenario de S3).
 
 ### 🛠️ Cómo desplegarlo
 
-**Requisitos:** Node.js, AWS CLI y credenciales de una cuenta de AWS con permisos para crear funciones Lambda, APIs, roles de IAM y grupos de logs.
+**Requisitos:** Node.js, AWS CLI y un perfil de AWS configurado localmente con el nombre `dev-environment`, con permisos para crear funciones Lambda, APIs, roles de IAM y grupos de logs. Los scripts de despliegue usan ese perfil de forma fija, para no desplegar por error en otra cuenta.
 
 ```bash
 npm install
@@ -71,20 +71,22 @@ npx aws-cdk synth
 Confirmar con qué cuenta se va a desplegar, antes de crear nada:
 
 ```bash
-aws sts get-caller-identity
+aws sts get-caller-identity --profile dev-environment
 ```
 
-Ver qué se va a crear y desplegar:
+Ver qué se va a crear:
 
 ```bash
-npx aws-cdk diff
+npx aws-cdk diff --profile dev-environment
 ```
+
+Desplegar (equivale a `cdk deploy --profile dev-environment`):
 
 ```bash
-npx aws-cdk deploy
+npm run deploy:dev
 ```
 
-Si la cuenta y la región nunca se usaron con CDK, hace falta ejecutar una vez `npx aws-cdk bootstrap` antes del `deploy`.
+Si la cuenta y la región nunca se usaron con CDK, hace falta ejecutar una vez `npx aws-cdk bootstrap --profile dev-environment` antes del despliegue.
 
 Al terminar, CDK imprime la URL de la API (`ApiSaludoEndpoint...`). Para probarla:
 
@@ -92,16 +94,33 @@ Al terminar, CDK imprime la URL de la API (`ApiSaludoEndpoint...`). Para probarl
 curl URL_DE_LA_API
 ```
 
-Para ver los logs de la función en CloudWatch, desde la consola: función Lambda → pestaña **Monitor** → **View CloudWatch logs**.
+Para ver los logs de la función en CloudWatch desde la terminal:
+
+```bash
+aws logs tail /aws/lambda/aws-coderhouse-saludo --since 5m --profile dev-environment
+```
+
+También se pueden ver desde la consola: función Lambda → pestaña **Monitor** → **View CloudWatch logs**.
 
 ### 📸 Evidencia
 
-> Las capturas se agregan en `capturas/` después del despliegue.
+Capturas de la ejecución real del despliegue, guardadas en [`capturas/`](capturas/). Se ocultaron el ID de cuenta y la URL de la API.
 
-- Respuesta de la API con `curl` (`Hola, mundo desde Lambda`): pendiente
-- Rol de IAM con `AWSLambdaBasicExecutionRole`: pendiente
-- Función con el trigger de API Gateway en la consola: pendiente
-- Log de la ejecución en CloudWatch: pendiente
+**1. La API responde con `200 OK`.** Petición con `curl` a la URL de la API: devuelve el mensaje de la función.
+
+![Respuesta de la API con curl](capturas/01-curl-respuesta.png)
+
+**2. El rol de ejecución tiene la política de logs.** El rol que CDK creó para la función tiene adjunta `AWSLambdaBasicExecutionRole`.
+
+![Rol de IAM con AWSLambdaBasicExecutionRole](capturas/02-rol-iam.png)
+
+**3. La función tiene a API Gateway como trigger.** Vista general de la función en la consola de Lambda.
+
+![Función Lambda con el trigger de API Gateway](capturas/03-lambda-trigger.png)
+
+**4. Los logs quedan en CloudWatch.** Tres invocaciones de la función, cada una con la línea `Ruta del evento:` y su resumen de duración y memoria.
+
+![Log de la ejecución en CloudWatch](capturas/04-cloudwatch-log.webp)
 
 ### ⚠️ Errores comunes que se tuvieron en cuenta
 
@@ -111,11 +130,13 @@ Para ver los logs de la función en CloudWatch, desde la consola: función Lambd
 
 ### 🧹 Limpieza
 
-La API queda pública, sin autenticación. Al terminar de sacar las capturas, conviene borrar todo:
+La API queda pública, sin autenticación. Al terminar la entrega, se borra todo (equivale a `cdk destroy --profile dev-environment`):
 
 ```bash
-npx aws-cdk destroy
+npm run destroy:dev
 ```
+
+Pide confirmación antes de borrar. Elimina la función, la API, el rol de IAM y el grupo de logs, que se configuró con retención de una semana y con política de borrado para que no quede nada en la cuenta.
 
 ---
 
