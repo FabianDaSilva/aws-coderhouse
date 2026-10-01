@@ -4,7 +4,7 @@ Repositorio con mis entregas del curso **Cloud Computing (AWS)** de [Coderhouse]
 
 ## 📚 Índice de entregas
 
-1. [**AWS Lambda: Introducción al cómputo serverless**](#-entrega-1--aws-lambda-introducción-al-cómputo-serverless) · Escenario B (API Gateway) · 🚧 en curso
+1. [**AWS Lambda: Introducción al cómputo serverless**](#-entrega-1--aws-lambda-introducción-al-cómputo-serverless) · Escenario B (API Gateway) · 🔎 en revisión
 
 ## 🔀 Cómo está organizado el repositorio
 
@@ -17,7 +17,7 @@ Repositorio con mis entregas del curso **Cloud Computing (AWS)** de [Coderhouse]
 
 ## 🚀 Entrega 1 · AWS Lambda: Introducción al cómputo serverless
 
-**Escenario B (API):** una función Lambda que se dispara vía **API Gateway** y responde con el mensaje `Hola, mundo desde Lambda`.
+**Escenario B (API):** una función Lambda que se dispara vía **API Gateway** y responde con un saludo: `Holaa, mundo desde Lambda! 🖖`.
 
 **Objetivo del ejercicio:** pasar de la teoría a la práctica con una arquitectura básica *event-driven*, donde una acción en la nube (una petición HTTP) dispara automáticamente mi código, usando los permisos de seguridad de IAM. La infraestructura se define con AWS CDK en lugar de crearla a mano desde la consola.
 
@@ -25,7 +25,7 @@ Repositorio con mis entregas del curso **Cloud Computing (AWS)** de [Coderhouse]
 
 1. Un cliente hace una petición HTTP a la URL de la API.
 2. **API Gateway** recibe la petición y la reenvía a la función.
-3. **Lambda** ejecuta `lambda/index.mjs`, registra la ruta pedida en los logs y responde `200` con el texto `Hola, mundo desde Lambda`.
+3. **Lambda** ejecuta `lambda/index.mjs`, registra la ruta pedida en los logs y responde `200` con el texto `Holaa, mundo desde Lambda! 🖖`.
 4. Los logs de cada ejecución quedan en **CloudWatch Logs**.
 
 ```mermaid
