@@ -1,15 +1,16 @@
 # aws-coderhouse
 
-Repositorio con mis entregas del curso **Cloud Computing (AWS)** de [Coderhouse](https://www.coderhouse.com/). Cada entrega es un ejercicio práctico del curso, resuelto con infraestructura como código usando **AWS CDK** (JavaScript).
+Repositorio con mis entregas del curso **Cloud Computing (AWS)** de [Coderhouse](https://www.coderhouse.com/). Cada entrega es un ejercicio práctico del curso, resuelto con infraestructura como código usando **AWS CDK** (JavaScript) o con documentación y diagramas de arquitectura.
 
 ## 📚 Índice de entregas
 
 1. [**AWS Lambda: Introducción al cómputo serverless**](#-entrega-1--aws-lambda-introducción-al-cómputo-serverless) · Escenario B (API Gateway) · 🔎 en revisión
+2. [**Pre-entrega 5 · Arquitectura de datos: RDS vs. DynamoDB**](entregas/05-arquitectura-de-datos/README.md) · Documento de arquitectura de datos del proyecto «Aula Digital» · 🔎 en revisión
 
 ## 🔀 Cómo está organizado el repositorio
 
 - **`main`:** solo tiene entregas terminadas y revisadas.
-- **Una rama por entrega:** cada ejercicio se desarrolla en su propia rama, con el nombre `entrega/NN-tema`. Por ejemplo, `entrega/01-lambda-serverless`.
+- **Una rama por entrega:** cada ejercicio se desarrolla en su propia rama, con el nombre `jdasilva/<descripcion>`. Por ejemplo, `jdasilva/entrega-5-datos-rds-dynamodb`.
 - **Un Pull Request por entrega:** al terminar, se abre un PR hacia `main` con el título de la entrega, y se mergea. Así el historial queda ordenado y cada entrega se puede revisar por separado.
 - **Este índice:** al mergear una entrega se agrega una línea acá con su título y su estado.
 
