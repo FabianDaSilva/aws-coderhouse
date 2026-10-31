@@ -56,7 +56,7 @@ En este escenario la función no accede a otros servicios, por eso no lleva pol�
 
 ### 🛠️ Cómo desplegarlo
 
-**Requisitos:** Node.js, AWS CLI y un perfil de AWS configurado localmente con el nombre `dev-environment`, con permisos para crear funciones Lambda, APIs, roles de IAM y grupos de logs. Los scripts de despliegue usan ese perfil de forma fija, para no desplegar por error en otra cuenta.
+**Requisitos:** Node.js, AWS CLI y un perfil de AWS configurado localmente con el nombre `coderhouse`, con permisos para crear funciones Lambda, APIs, roles de IAM y grupos de logs. Los scripts de despliegue usan ese perfil de forma fija, para no desplegar por error en otra cuenta. El perfil se crea con `aws login --profile coderhouse`, entrando con un usuario IAM (no con el usuario raíz).
 
 ```bash
 npm install
@@ -71,22 +71,24 @@ npx aws-cdk synth
 Confirmar con qué cuenta se va a desplegar, antes de crear nada:
 
 ```bash
-aws sts get-caller-identity --profile dev-environment
+aws sts get-caller-identity --profile coderhouse
 ```
 
 Ver qué se va a crear:
 
 ```bash
-npx aws-cdk diff --profile dev-environment
+npx aws-cdk diff --profile coderhouse
 ```
 
-Desplegar (equivale a `cdk deploy --profile dev-environment`):
+Desplegar (equivale a `cdk deploy --profile coderhouse`):
 
 ```bash
-npm run deploy:dev
+npm run deploy
 ```
 
-Si la cuenta y la región nunca se usaron con CDK, hace falta ejecutar una vez `npx aws-cdk bootstrap --profile dev-environment` antes del despliegue.
+Si la cuenta y la región nunca se usaron con CDK, hace falta ejecutar una vez `npx aws-cdk bootstrap --profile coderhouse` antes del primer despliegue.
+
+> **Costos:** se despliega solo cuando hace falta, para sacar las capturas, y se borra todo al terminar, para no gastar crédito de la cuenta.
 
 Al terminar, CDK imprime la URL de la API (`ApiSaludoEndpoint...`). Para probarla:
 
@@ -97,7 +99,7 @@ curl URL_DE_LA_API
 Para ver los logs de la función en CloudWatch desde la terminal:
 
 ```bash
-aws logs tail /aws/lambda/aws-coderhouse-saludo --since 5m --profile dev-environment
+aws logs tail /aws/lambda/aws-coderhouse-saludo --since 5m --profile coderhouse
 ```
 
 También se pueden ver desde la consola: función Lambda → pestaña **Monitor** → **View CloudWatch logs**.
@@ -130,10 +132,10 @@ Capturas de la ejecución real del despliegue, guardadas en [`capturas/`](captur
 
 ### 🧹 Limpieza
 
-La API queda pública, sin autenticación. Al terminar la entrega, se borra todo (equivale a `cdk destroy --profile dev-environment`):
+La API queda pública, sin autenticación. Al terminar la entrega, se borra todo (equivale a `cdk destroy --profile coderhouse`):
 
 ```bash
-npm run destroy:dev
+npm run destroy
 ```
 
 Pide confirmación antes de borrar. Elimina la función, la API, el rol de IAM y el grupo de logs, que se configuró con retención de una semana y con política de borrado para que no quede nada en la cuenta.
