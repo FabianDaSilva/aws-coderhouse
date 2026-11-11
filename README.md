@@ -6,6 +6,7 @@ Repositorio con mis entregas del curso **Cloud Computing (AWS)** de [Coderhouse]
 
 1. [**AWS Lambda: Introducción al cómputo serverless**](#-entrega-1--aws-lambda-introducción-al-cómputo-serverless) · Escenario B (API Gateway) · 🔎 en revisión
 2. [**Pre-entrega 5 · Arquitectura de datos: RDS vs. DynamoDB**](entregas/05-arquitectura-de-datos/README.md) · Documento de arquitectura de datos del proyecto «Aula Digital» · 🔎 en revisión
+3. [**Módulo 7 · Dashboard de monitoreo con Amazon CloudWatch**](entregas/07-cloudwatch-dashboard/README.md) · Definición en JSON de un dashboard con widgets de CPU y red de EC2 · 🔎 en revisión
 
 ## 🔀 Cómo está organizado el repositorio
 
