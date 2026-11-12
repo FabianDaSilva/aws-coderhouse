@@ -14,7 +14,7 @@
         "stat": "Average",
         "period": 300,
         "metrics": [
-          ["AWS/EC2", "CPUUtilization", "InstanceId", "i-0123456789abcdef0", { "label": "CPU (%)" }]
+          ["AWS/EC2", "CPUUtilization", "InstanceId", "i-05a433d4ee85bf551", { "label": "CPU (%)" }]
         ],
         "yAxis": { "left": { "min": 0, "max": 100 } }
       }
@@ -33,9 +33,28 @@
         "stat": "Sum",
         "period": 300,
         "metrics": [
-          ["AWS/EC2", "NetworkIn", "InstanceId", "i-0123456789abcdef0", { "label": "Entrada (NetworkIn)" }],
-          ["AWS/EC2", "NetworkOut", "InstanceId", "i-0123456789abcdef0", { "label": "Salida (NetworkOut)" }]
+          ["AWS/EC2", "NetworkIn", "InstanceId", "i-05a433d4ee85bf551", { "label": "Entrada (NetworkIn)" }],
+          ["AWS/EC2", "NetworkOut", "InstanceId", "i-05a433d4ee85bf551", { "label": "Salida (NetworkOut)" }]
         ]
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 6,
+      "width": 24,
+      "height": 5,
+      "properties": {
+        "title": "Salud de la instancia · fallos de chequeo de estado (0 = sana)",
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "stat": "Maximum",
+        "period": 300,
+        "metrics": [
+          ["AWS/EC2", "StatusCheckFailed", "InstanceId", "i-05a433d4ee85bf551", { "label": "Fallos de chequeo (StatusCheckFailed)" }]
+        ],
+        "yAxis": { "left": { "min": 0, "max": 1 } }
       }
     }
   ]
